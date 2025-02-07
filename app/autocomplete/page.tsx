@@ -20,6 +20,7 @@ export default function AutoComplete() {
             try {
                 const response = await axios.get(`https://dummyjson.com/products/search?q=${query}`);
                 setProducts(response.data.products);
+                console.log(response.data.products);
             } catch (err) {
                 console.error("Error Occurred:", err);
             } finally {
