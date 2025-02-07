@@ -1,101 +1,139 @@
-import Image from "next/image";
+"use client"
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { Search, Filter } from 'lucide-react';
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+
+const problems = [
+	{
+		id: 1,
+		title: "Auto Complete Search Features",
+		link: "/autocomplete",
+		company: "Google, Amazon, Meta",
+		level: "medium",
+		status: "active",
+		description: "Implement an autocomplete feature with debouncing and API integration"
+	},
+	{
+		id: 2,
+		title: "Infinite Scroll Implementation",
+		link: "/infinite-scroll",
+		company: "LinkedIn, Twitter, Meta",
+		level: "medium",
+		status: "coming",
+		description: "Build infinite scroll with intersection observer and virtualization"
+	},
+	{
+		id: 3,
+		title: "Todo App with Redux",
+		link: "/todo-redux",
+		company: "Microsoft, Amazon",
+		level: "easy",
+		status: "coming",
+		description: "Create a todo application with state management using Redux"
+	},
+	{
+		id: 4,
+		title: "Image Carousel",
+		link: "/carousel",
+		company: "Airbnb, Uber",
+		level: "easy",
+		status: "coming",
+		description: "Build a responsive image carousel with touch support"
+	},
+	{
+		id: 5,
+		title: "Star Rating Component",
+		link: "/star-rating",
+		company: "Booking.com, Yelp",
+		level: "easy",
+		status: "coming",
+		description: "Create an interactive star rating component"
+	}
+];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+	const [searchTerm, setSearchTerm] = useState('');
+	const [selectedLevel, setSelectedLevel] = useState('all');
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+	const filteredProblems = problems.filter(problem => {
+		const matchesSearch = problem.title.toLowerCase().includes(searchTerm.toLowerCase());
+		const matchesLevel = selectedLevel === 'all' || problem.level === selectedLevel;
+		return matchesSearch && matchesLevel;
+	});
+
+	const levels = ['all', 'easy', 'medium', 'hard'];
+
+	return (
+		<div className="max-w-6xl mx-auto p-6">
+			<h1 className="text-4xl font-bold mb-6">Machine Round Problems</h1>
+			<p className="text-gray-600 mb-8">
+				Practice commonly asked machine coding round problems from top companies.
+			</p>
+
+			<div className="flex gap-4 mb-8">
+				<div className="relative flex-1">
+					<Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+					<Input
+						type="text"
+						placeholder="Search problems..."
+						className="pl-10"
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+					/>
+				</div>
+				<div className="flex gap-2">
+					{
+					levels.map(level => (
+						<button
+							key={level}
+							onClick={() => setSelectedLevel(level)}
+							className={`px-4 py-2 rounded-lg capitalize ${selectedLevel === level
+									? 'bg-blue-600 text-white'
+									: 'bg-gray-100 hover:bg-gray-200'
+								}`}
+						>
+							{level}
+						</button>
+					))
+					}
+				</div>
+			</div>
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				{
+				filteredProblems.map((problem) => (
+					<Card key={problem.id} className="flex flex-col">
+						<CardHeader>
+							<div className="flex justify-between items-start">
+								<h3 className="text-xl font-semibold">{problem.title}</h3>
+								<Badge variant={problem.level === 'easy' ? 'default' : 'destructive'}>
+									{problem.level}
+								</Badge>
+							</div>
+						</CardHeader>
+						<CardContent>
+							<p className="text-gray-600 mb-2">{problem.description}</p>
+							<p className="text-sm text-gray-500">Companies: {problem.company}</p>
+						</CardContent>
+						<CardFooter className="mt-auto">
+							<Link
+								href={problem.link}
+								className={`w-full text-center py-2 rounded-lg ${problem.status === 'coming'
+										? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+										: 'bg-blue-600 text-white hover:bg-blue-700'
+									}`}
+								onClick={(e) => problem.status === 'coming' && e.preventDefault()}
+							>
+								{problem.status === 'coming' ? 'Coming Soon' : 'View Problem'}
+							</Link>
+						</CardFooter>
+					</Card>
+				))
+				}
+			</div>
+		</div>
+	);
 }
